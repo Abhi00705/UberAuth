@@ -26,4 +26,9 @@ public class AuthController {
         PassengerSignupResponseDto passengerResponseDto = authService.signupPassenger(passengerSignupRequestDto);
         return new ResponseEntity<>(passengerResponseDto, HttpStatus.CREATED);
     }
+
+    @GetMapping("/signin/passenger")
+    public ResponseEntity<?> signin(){
+        return new ResponseEntity<>(10, HttpStatus.CREATED);
+    }
 }
