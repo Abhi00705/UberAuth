@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PassengerRepository extends JpaRepository<Passenger, Long> {
-    Optional<Passenger> findPassengerByEmailId(String emailId);
+    Optional<Passenger> findByEmailId(String emailId);
 
 
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,12 +55,12 @@ public class JwtService implements CommandLineRunner {
         return claimsResolve.apply(claims);
     }
 
-    private Boolean isTokenExpired(String token){
+    public Boolean isTokenExpired(String token){
 //        return extractClaim(token, Claims::getExpiration); // it return date not boolean value or it don't compare value
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token){
+     public Date extractExpiration(String token){
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -71,18 +72,18 @@ public class JwtService implements CommandLineRunner {
         return extractClaim(token, Claims::getSubject);
     }
 
-    private Boolean validateToken(String token, String email){
+    public Boolean validateToken(String token, String email){
         final String userEmailFetchedFromToken = extractEmail(token);
         return (userEmailFetchedFromToken.equals(email)) && !isTokenExpired(token);
     }
 
-    private Object extractPayload(String token, String payloadKey){
+    public Object extractPayload(String token, String payloadKey){
         Claims claims = extractAllPayload(token);
         return (Object) claims.get(payloadKey);
     }
 
 
-    private Key getSignKey() {
+    public Key getSignKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -92,14 +93,14 @@ public class JwtService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("+++++++++++");
-        Map<String, Object> mp = new HashMap<>();
-        mp.put("name", "abhishek");
-        mp.put("phoneNumber", "123456789");
-        mp.put("email", "Abhi@gmail.com");
-
-        String result = createToken(mp, "Abhi");
-        System.out.println("Token: "+result);
-        System.out.println(extractPayload(result, "email").toString());
+//        Map<String, Object> mp = new HashMap<>();
+//        mp.put("name", "abhishek");
+//        mp.put("phoneNumber", "123456789");
+//        mp.put("email", "Abhi@gmail.com");
+//
+//        String result = createToken(mp, "Abhi");
+//        System.out.println("Token: "+result);
+//        System.out.println(extractPayload(result, "email").toString());
 
     }
 }
