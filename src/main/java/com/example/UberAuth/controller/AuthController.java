@@ -7,8 +7,10 @@ import com.example.UberAuth.DTO.PassengerSignupResponseDto;
 import com.example.UberAuth.services.AuthService;
 import com.example.UberAuth.services.JwtService;
 import io.jsonwebtoken.Jwt;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,9 +28,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+
     @Value("${cookie.expiry}")
     private int cookieExpiry;
 
+    @Autowired
     private JwtService jwtService;
 
 //    private Authentication authentication;
@@ -53,19 +57,21 @@ public class AuthController {
             Authentication authentication = authService.authentication(authRequestDTO);
             System.out.println("-----Singin----------");
             if(authentication.isAuthenticated()){
-                Map<String,String> out1 = new HashMap<>();
+                System.out.println("-----------------checking-------------");
+                System.out.println("emailId: "+authRequestDTO.getEmailId());
 
                 Map<String, Object> userDetail = new HashMap<>();
                 userDetail.put("emailId", authRequestDTO.getEmailId());
                 userDetail.put("password", authRequestDTO.getPassword());
                 String jwtToken = jwtService.createToken(userDetail ,authRequestDTO.getEmailId());
-
-                ResponseCookie cookie = ResponseCookie.from("jwtToken", jwtToken)
+                System.out.println("--------JwtToken: "+jwtToken);
+                ResponseCookie cookie = ResponseCookie.from("JwtToken", jwtToken)
                         .httpOnly(false)
                         .secure(false)
                         .path("/")
                         .maxAge(cookieExpiry)
                         .build();
+                System.out.println("---------cookie 1: "+cookie);
                 response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
                 return new ResponseEntity<>(AuthResponseDto.builder().sucess(true).build(), HttpStatus.OK);
             }
@@ -81,6 +87,10 @@ public class AuthController {
 
     @GetMapping("/validate")
     public ResponseEntity<?> validate(HttpServletRequest request){
+        System.out.println("-----------validating-------");
+        for(Cookie cookie: request.getCookies()){
+            System.out.println(cookie.getName()+" : "+cookie.getValue());
+        }
         return new ResponseEntity<>("sucessfull", HttpStatus.OK);
     }
 

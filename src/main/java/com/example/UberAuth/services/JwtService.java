@@ -1,6 +1,6 @@
 package com.example.UberAuth.services;
 
-import com.example.UberAuth.Enums.BookingStatus;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -68,7 +68,7 @@ public class JwtService implements CommandLineRunner {
 //        return extractClaim(token, Claims::getSubject);
 //    }
 
-    private String extractEmail(String token){
+    public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }
 
